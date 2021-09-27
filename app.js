@@ -6,6 +6,7 @@ const methodOverride = require('method-override');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
+const { RSA_NO_PADDING } = require('constants');
 
 const app = express();
 
@@ -32,9 +33,13 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-app.get("/info", (req,res) => {
-    res.render("info");
-})
+app.get("/wedding", (req,res) => {
+    res.render("wedding");
+});
+
+app.get("/wedding/rsvp", (req, res) => {
+    res.render("rsvp");
+});
 
 app.listen(3000, () => {
     console.log(`Serving on port 3000`)
