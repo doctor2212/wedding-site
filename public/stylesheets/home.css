@@ -10,9 +10,7 @@ body{
     url("https://images.pexels.com/photos/818649/pexels-photo-818649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
     background-size: cover;
     background-position: center;
-    /* filter: blur(3px);
-    -webkit-filter: blur(3px); */
-}
+};
 
 .btn-light {
     color: #212529;
@@ -27,31 +25,3 @@ body{
 .btn-light:hover {
     transform: translateY(1px);
 }
-
-/* .nav-link {
-    padding: 0.25rem 0;
-    font-weight: 700;
-    color: rgba(255,255,255,0.5);
-    margin-left: 1rem;
-    border-bottom: 0.25rem solid transparent
-}
-
-.nav-link:hover{
-    color: rgba(255,255,255,0.5);
-    border-bottom-color: rgba(255,255,255,0.5);
-}
-
-.nav-link.active {
-    color: white;
-    border-bottom-color:white;
-}
-
-.btn-secondary{
-    color: #333;
-    text-shadow: none;
-}
-
-.btn-secondary:hover{
-    color: rgb(95, 94, 94);
-    text-shadow: none;
-} */
