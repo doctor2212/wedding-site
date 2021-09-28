@@ -1,16 +1,18 @@
 const express = require('express');
-const path = require('path');
+const app = express();
+
 const mongoose = require('mongoose');
+const path = require('path');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
+
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
 const Guest = require("./models/guest");
-
-const app = express();
+const { isLoggedIn } = require("./middleware")
 
 mongoose.connect("mongodb://localhost:27017/wedding-site", { 
     useNewUrlParser: true,
@@ -34,7 +36,7 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
 const sessionConfig = {
-    secret: 'thisshouldbeabettersecret!',
+    secret: 'thisshouldbeabettersecret',
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -45,6 +47,7 @@ const sessionConfig = {
 };
 
 app.use(session(sessionConfig));
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -53,21 +56,36 @@ passport.use(new LocalStrategy(Guest.authenticate()));
 passport.serializeUser(Guest.serializeUser());
 passport.deserializeUser(Guest.deserializeUser());
 
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
+
 app.get("/", (req, res) => {
     res.render("landing-page");
     
 });
 
 app.get("/login", (req, res) => {
-    res.render("users/login")
+    if(!req.user) {
+        res.render("users/login")
+    } else{
+        res.render("wedding")
+    }
 });
 
-app.post("/login", passport.authenticate("local", {failiureRedirect: "/login"}), (req, res) => {
-    console.log("Success")
+app.post("/login", passport.authenticate("local", {failureRedirect: "/login"}), (req, res) => {
+    req.flash("success", "Welcome", req.user.username)
     res.redirect("/wedding")
 });
 
-
+app.get("/logout", (req, res) => {
+    req.logout();
+    req.flash("success", "Goodbye")
+    res.redirect("/")
+})
 
 // app.get("/new", async (req, res) => {
 //     const guest = new Guest({attending: true, username: "admin"});
@@ -75,27 +93,26 @@ app.post("/login", passport.authenticate("local", {failiureRedirect: "/login"}),
 //     res.redirect("/wedding")
 // })
 
-app.get("/wedding", (req,res) => {
+app.get("/wedding", isLoggedIn, (req,res) => {
     res.render("wedding");
 });
 
-app.post("/wedding", (req, res) => {
-    const { rsvp } = req.body;
-    console.log(rsvp);
+app.post("/wedding", isLoggedIn, async (req, res) => {
+    const { username } = req.user;
+    const { attending } = req.body;
+    if(attending.true){
+        const updatedGuest = await Guest.findOneAndUpdate({ username }, {attending: true} )
+        await updatedGuest.save()
+    } else if (!attending.true) {
+        const updatedGuest = await Guest.findOneAndUpdate({ username }, {attending: false} )
+        await updatedGuest.save()
+    };
+    req.flash("success", "RSVP successfully updated")
     res.redirect("/wedding");
 });
 
 app.get("/register", (req, res) => {
     res.render("users/register")
-});
-
-app.get("/login", (req, res) => {
-    res.render("users/login");
-});
-
-
-app.get("/wedding/rsvp", (req, res) => {
-    res.render("rsvp");
 });
 
 app.listen(3000, () => {

@@ -11,9 +11,13 @@
 
 <body class="d-flex flex-column vh-100">
     <header class="container">
+        <%- include('../partials/flash')%>
         <h1 class="display-6 mt-2 text-center">The Wedding of Grace & Nathan</h1>
+        <% if(currentUser) {%> 
+            <%- include('../partials/navbar')%>
+        <% } %> 
     </header>   
-    <%- include('../partials/navbar')%> 
+    
     <main>
         <%- body %>
     </main>
