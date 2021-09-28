@@ -12,22 +12,60 @@
             <p class="lead">15th July 2022
                 <br>St. Edmund's Church, Taverham</br>
             </p>
-            <form action="GET">
-                <a class="btn btn-primary btn-dblue" href="/rsvp">RSVP</a>
-            </form>
+            <button class="btn btn-primary btn-dblue" data-bs-toggle="modal" data-bs-target="#RSVP"
+                href="/wedding/rsvp">RSVP</button>
         </div>
     </div>
-    <div class="row pt-5 pb-2">
-        <div class="col-6 d-inline text-center my-auto">
-            <h2>The Day</h2>
-            <p class="lead">Join us!</p>
-            <p>You are warmly invited to join us on our wedding day, for a ceremony in the church and then an informal
-                time of drinks and cake after the ceremony!</p>
-        </div>
-        <div class="col-6">
-            <img class="img-flex img-restrained"
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/St_Edmund%27s_church_Taverham_Norfolk_%283683718801%29.jpg/1200px-St_Edmund%27s_church_Taverham_Norfolk_%283683718801%29.jpg"
-                alt="">
+
+<div class="row pt-5 pb-2">
+    <div class="col-6 d-inline text-center my-auto">
+        <h2>The Day</h2>
+        <p class="lead">Join us!</p>
+        <p>You are warmly invited to join us on our wedding day, for a ceremony in the church and then an informal
+            time of drinks and cake after the ceremony!</p>
+    </div>
+    <div class="col-6">
+        <img class="img-flex img-restrained"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/St_Edmund%27s_church_Taverham_Norfolk_%283683718801%29.jpg/1200px-St_Edmund%27s_church_Taverham_Norfolk_%283683718801%29.jpg"
+            alt="">
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="RSVP" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">RSVP</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/wedding" method="POST" novalidate>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="name" class="form-control" id="name" name="name">
+                        <div class="form-text">Please enter your first and last name<div>
+                    </div>
+
+                    <div class="form-check mt-3">
+                        <input type="radio" class="form-check-input" id="rsvp1" name="rsvp[true]" required>
+                        <label class="form-check-label" for="rsvp1">I can attend</label>
+                      </div>
+
+                      <div class="form-check mb-3">
+                        <input type="radio" class="form-check-input" id="rsvp2" name="rsvp[false]" required>
+                        <label class="form-check-label" for="rsvp2">I cannot attend</label>
+                        <div class="invalid-feedback">Please select one of the boxes</div>
+                      </div>
+
+                    <div class="modal-footer">
+                        <button type="submit"  class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 </div>
