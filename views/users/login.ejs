@@ -1,29 +1,33 @@
-<% layout("/layouts/boilerplate") %>
-<div class="container d-flex justify-content-center pt-3">
-    <div class="card" style="width: 50rem;">
-        <img src="https://images.pexels.com/photos/818649/pexels-photo-818649.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-            class="card-img-top">
-        <div class="card-body">
-            <h5 class="card-title">Login</h5>
-            <form action="/login" method="POST" class="validated-form" novalidate>
-                <div class="mb-3">
-                    <label class="form-label" for="username">Username</label>
-                    <input class="form-control" type="text" id="username" name="username" autofocus required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
+<head>
+    <link rel="stylesheet" href="stylesheets/bootstrap.css">
+    <link rel="stylesheet" href="stylesheets/signin.css">
+    <style>@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@600&display=swap');</style>
+</head>
 
-                <div class="mb-3">
-                    <label class="form-label" for="password">Password</label>
-                    <input class="form-control" type="password" id="password" name="password" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <button class="btn btn-success btn-block">Login</button>
-            </form>
-            </form>
-        </div>
-    </div>
-</div>
+    <body class="d-flex flex-column vh-100">
+        <header class="container">
+            <h1 class="display-6 mt-2 text-center">The Wedding of Grace & Nathan</h1>
+        </header>
+
+    <main class="container text-center">
+        <form action="/login" method="POST" class="form-signin validated-form" novalidate>
+            <img class="mb-4" src="/images/key.svg" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Sign In</h1>
+
+            <div class="mb-3 form-floating">
+                <input class="form-control sr-only" type="text" id="username" name="username" placeholder=" " autofocus required>
+                <label class="form-label" for="username">Username</label> 
+                <div class="valid-feedback">Looks good!</div>
+            </div>
+            
+            <div class="mb-3 form-floating">
+                <input class="form-control" type="password" id="password" name="password" placeholder=" " required>
+                <label class="form-label" for="password">Password</label>
+                <div class="valid-feedback">Looks good!</div>
+            </div>
+            
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+    </main>
+</body>
+    

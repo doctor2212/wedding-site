@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 const GuestSchema = new Schema({
     attending: {
-        type: Boolean,
+        type: String,
+        enum: ["yes", "no", "unknown"],
         required: true,
     }
 });

@@ -12,6 +12,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
 const Guest = require("./models/guest");
+const catchAsync = require("./utils/catchAsync");
 const { isLoggedIn } = require("./middleware")
 
 mongoose.connect("mongodb://localhost:27017/wedding-site", { 
@@ -72,7 +73,7 @@ app.get("/login", (req, res) => {
     if(!req.user) {
         res.render("users/login")
     } else{
-        res.render("wedding")
+        res.redirect("/wedding");
     }
 });
 
@@ -88,32 +89,49 @@ app.get("/logout", (req, res) => {
 })
 
 // app.get("/new", async (req, res) => {
-//     const guest = new Guest({attending: true, username: "admin"});
-//     const registeredGuest = await Guest.register(guest, "admin");
+//     const guest = new Guest({attending: "unknown", username: "Nathan"});
+//     const registeredGuest = await Guest.register(guest, "nathan");
 //     res.redirect("/wedding")
-// })
+// });
+
+// app.get("/new", async (req, res) => {
+//     const guest = new Guest({attending: "unknown", username: "John"});
+//     const registeredGuest = await Guest.register(guest, "john");
+//     res.redirect("/wedding")
+// });
 
 app.get("/wedding", isLoggedIn, (req,res) => {
-    res.render("wedding");
+    res.render("wedding/wedding");
 });
 
-app.post("/wedding", isLoggedIn, async (req, res) => {
+app.post("/wedding", isLoggedIn, catchAsync(async (req, res) => {
     const { username } = req.user;
     const { attending } = req.body;
-    if(attending.true){
-        const updatedGuest = await Guest.findOneAndUpdate({ username }, {attending: true} )
+    if(attending === "yes"){
+        const updatedGuest = await Guest.findOneAndUpdate({ username }, {attending: "yes"} )
         await updatedGuest.save()
-    } else if (!attending.true) {
-        const updatedGuest = await Guest.findOneAndUpdate({ username }, {attending: false} )
+    } else if (attending === "no") {
+        const updatedGuest = await Guest.findOneAndUpdate({ username }, {attending: "no"} )
         await updatedGuest.save()
     };
     req.flash("success", "RSVP successfully updated")
     res.redirect("/wedding");
+}));
+
+app.get("/wedding/location", isLoggedIn, (req, res) => {
+    res.render("wedding/location");
 });
 
 app.get("/register", (req, res) => {
     res.render("users/register")
 });
+
+app.get("/admin", catchAsync(async (req, res) => {
+    const attending = await Guest.find({"attending" : "yes"});
+    const notAttending = await Guest.find({"attending" : "no"});
+    const unknown = await Guest.find({"attending" : "unknown"});
+    res.render("users/admin", {attending, notAttending , unknown});
+}));
 
 app.listen(3000, () => {
     console.log(`Serving on port 3000`)

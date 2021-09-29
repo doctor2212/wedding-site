@@ -36,24 +36,35 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">RSVP</h5>
+                <h5 class="modal-title" id="exampleModalLabel">RSVP </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="/wedding" method="POST" novalidate>
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="name" class="form-control" id="name" name="name">
-                        <div class="form-text">Please enter your first and last name<div>
+                        <p class="lead"><%= currentUser.username %> -
+                            <% if(currentUser.attending === "yes") { %>
+                                <%= "attending" %> 
+                            <% } else if (currentUser.attending === "no") { %>
+                                <%= "not attending" %> 
+                            <% } else if (currentUser.attending = "unknown") { %>
+                                <%= "unknown" %>  
+                            <% } %> </p>
                     </div>
 
                     <div class="form-check mt-3">
-                        <input type="radio" class="form-check-input" id="rsvp1" name="attending[true]" required>
+                        <input type="radio" class="form-check-input" id="rsvp1" name="attending" value="yes" required   
+                        <% if(currentUser.attending === "yes") { %>
+                            <%="checked"%> 
+                        <% } %> >
                         <label class="form-check-label" for="rsvp1">I can attend</label>
                       </div>
 
                       <div class="form-check mb-3">
-                        <input type="radio" class="form-check-input" id="rsvp2" name="attending[false]" required>
+                        <input type="radio" class="form-check-input" id="rsvp2" name="attending" value="no" required 
+                        <% if(currentUser.attending === "no") { %>
+                            <%="checked"%> 
+                        <% } %> >
                         <label class="form-check-label" for="rsvp2">I cannot attend</label>
                         <div class="invalid-feedback">Please select one of the boxes</div>
                       </div>

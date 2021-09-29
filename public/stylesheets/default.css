@@ -1,6 +1,8 @@
 body{
     font-family: "Palatino Linotype";
     background-color:white;
+    height: 100vh;
+    padding-bottom: 70px;
 }
 
 .nav-link {

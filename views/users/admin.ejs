@@ -1,0 +1,32 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mb-3">
+    <h1 class="h3">Guests:</h1>
+    <div class="row">
+        <div class="col-4">
+            <ul class="list-group">
+                <li class="list-group-item active">Attending</li>
+                <% for(let guest of attending) { %> 
+                    <li class="list-group-item"><%= guest.username %> </li>
+                    <% } %> 
+              </ul>
+        </div>
+        <div class="col-4">
+            <ul class="list-group">
+                <li class="list-group-item active">Not Attending</li>
+                <% for(let guest of notAttending) { %> 
+                    <li class="list-group-item"><%= guest.username %> </li>
+                    <% } %> 
+              </ul>
+        </div>
+        <div class="col-4">
+            <ul class="list-group">
+                <li class="list-group-item active">Unknown (yet to RSVP)</li>
+                <% for(let guest of unknown) { %> 
+                    <li class="list-group-item"><%= guest.username %> </li>
+                    <% } %> 
+              </ul>
+        </div>
+    </div>
+</div>
+
