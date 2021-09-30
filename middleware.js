@@ -5,3 +5,11 @@ module.exports.isLoggedIn = (req, res, next) => {
     }
     next();
 }
+
+module.exports.isAdmin = (req, res, next) => {
+    if(!req.user.isAdmin === true){
+        req.flash("error", "You are unauthorised to perform this action");
+        return res.redirect("/wedding")
+    }
+    next();
+}

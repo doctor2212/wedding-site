@@ -12,8 +12,11 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
 const Guest = require("./models/guest");
+const Question = require("./models/questions");
+const Gift = require("./models/gifts");
 const catchAsync = require("./utils/catchAsync");
-const { isLoggedIn } = require("./middleware")
+const { isLoggedIn, isAdmin } = require("./middleware");
+const { findByIdAndUpdate, findOneAndDelete } = require('./models/guest');
 
 mongoose.connect("mongodb://localhost:27017/wedding-site", { 
     useNewUrlParser: true,
@@ -82,15 +85,17 @@ app.post("/login", passport.authenticate("local", {failureRedirect: "/login"}), 
     res.redirect("/wedding")
 });
 
-app.get("/logout", (req, res) => {
+app.get("/logout", isLoggedIn, (req, res) => {
     req.logout();
     req.flash("success", "Goodbye")
     res.redirect("/")
 })
 
 // app.get("/new", async (req, res) => {
-//     const guest = new Guest({attending: "unknown", username: "Nathan"});
-//     const registeredGuest = await Guest.register(guest, "nathan");
+//     // const guest = new Guest({attending: "unknown", username: "Nathan", isAdmin: true});
+//     // const registeredGuest = await Guest.register(guest, "nathan");
+//     const guest2 = new Guest({attending: "unknown", username: "Thomas", isAdmin: false, plusOnes: ["Matthew", "Mark", "Luke", "John"]});
+//     const registeredGuest2 = await Guest.register(guest2, "john");
 //     res.redirect("/wedding")
 // });
 
@@ -122,11 +127,50 @@ app.get("/wedding/location", isLoggedIn, (req, res) => {
     res.render("wedding/location");
 });
 
+app.get("/wedding/questions", isLoggedIn, catchAsync(async(req, res) => {
+    const [...questions] = await Question.find({});
+    res.render("wedding/questions", { questions })
+    
+}));
+
+app.post("/wedding/questions", isLoggedIn, catchAsync(async(req, res) => {
+    const {question, answer} = req.body;
+    const newQuestion = await new Question({question, answer});
+    await newQuestion.save();
+    res.redirect("/admin")
+}));
+
+app.delete("/wedding/questions", isLoggedIn, catchAsync(async(req, res) => {
+    const { question } = req.body;
+    const questionToDelete = await Question.findOneAndDelete({question});
+    res.redirect("/wedding/questions");
+}));
+
+app.get("/wedding/gifts", isLoggedIn, catchAsync(async(req, res) => {
+    const [...gifts] = await Gift.find({});
+    res.render("wedding/gifts", { gifts })
+    
+}));
+
+app.post("/wedding/gifts", isLoggedIn, catchAsync(async(req, res) => {
+    const {title, link} = req.body;
+    const newGift = await new Gift({title, link});
+    await newGift.save();
+    res.redirect("/admin")
+}));
+
+app.delete("/wedding/gifts", isLoggedIn, catchAsync(async(req, res) => {
+    const { title } = req.body;
+    const questionToDelete = await Gift.findOneAndDelete({title});
+    res.redirect("/wedding/questions");
+}));
+
+
 app.get("/register", (req, res) => {
     res.render("users/register")
 });
 
-app.get("/admin", catchAsync(async (req, res) => {
+app.get("/admin", isLoggedIn, isAdmin, catchAsync(async (req, res) => {
     const attending = await Guest.find({"attending" : "yes"});
     const notAttending = await Guest.find({"attending" : "no"});
     const unknown = await Guest.find({"attending" : "unknown"});
@@ -136,4 +180,3 @@ app.get("/admin", catchAsync(async (req, res) => {
 app.listen(3000, () => {
     console.log(`Serving on port 3000`)
 });
-

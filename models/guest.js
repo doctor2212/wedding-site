@@ -7,7 +7,17 @@ const GuestSchema = new Schema({
         type: String,
         enum: ["yes", "no", "unknown"],
         required: true,
-    }
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true,
+    },
+    plusOnes: [
+        {
+            type: String,
+            required: false,
+        }
+    ]
 });
 
 GuestSchema.plugin(passportLocalMongoose);

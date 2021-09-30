@@ -12,8 +12,12 @@
             <p class="lead">15th July 2022
                 <br>St. Edmund's Church, Taverham</br>
             </p>
-            <button class="btn btn-primary btn-dblue" data-bs-toggle="modal" data-bs-target="#RSVP"
-                href="/wedding/rsvp">RSVP</button>
+            <% if(currentUser.attending === "unknown") {%> 
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#RSVP">RSVP</button>
+            <% } else { %> 
+                <h2 class="h4"><img src="/images/check.svg" alt="" class="img-thumbnail"> RSVP'd</h2>
+                <p class="subtitle"><a data-bs-toggle="modal" data-bs-target="#RSVP" class="link-secondary" href="#"><small>Click here to change</small></p></a>
+            <% } %> 
         </div>
     </div>
 
@@ -36,21 +40,30 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">RSVP </h5>
+                <h5 class="modal-title" id="exampleModalLabel">RSVP -
+                <% if(currentUser.attending === "yes") { %>
+                    <%= "attending" %> 
+                <% } else if (currentUser.attending === "no") { %>
+                    <%= "not attending" %> 
+                <% } else if (currentUser.attending = "unknown") { %>
+                    <%= "unknown" %>  
+                <% } %> </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="/wedding" method="POST" novalidate>
                     <div class="mb-3">
-                        <p class="lead"><%= currentUser.username %> -
-                            <% if(currentUser.attending === "yes") { %>
-                                <%= "attending" %> 
-                            <% } else if (currentUser.attending === "no") { %>
-                                <%= "not attending" %> 
-                            <% } else if (currentUser.attending = "unknown") { %>
-                                <%= "unknown" %>  
-                            <% } %> </p>
-                    </div>
+                        <% if(!currentUser.plusOnes.length) {%>
+                            <p class="lead"><%= currentUser.username %></p>
+                        <% } else if(currentUser.plusOnes.length) { %>
+                            <p class="lead text-center"><%= currentUser.username%>'s Family:</p>
+                            <ul>
+                                <% for(members of currentUser.plusOnes) { %>
+                                    <li class=><%= members %></li>
+                                <% } %> 
+                            </ul>
+                            <hr>
+                        <% } %> 
 
                     <div class="form-check mt-3">
                         <input type="radio" class="form-check-input" id="rsvp1" name="attending" value="yes" required   

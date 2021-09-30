@@ -1,32 +1,105 @@
 <% layout("/layouts/boilerplate") %>
 
+
 <div class="container mb-3">
     <h1 class="h3">Guests:</h1>
     <div class="row">
         <div class="col-4">
             <ul class="list-group">
-                <li class="list-group-item active">Attending</li>
+                <li class="list-group-item list-group-item-info active">Attending</li>
                 <% for(let guest of attending) { %> 
-                    <li class="list-group-item"><%= guest.username %> </li>
+                    <li class="list-group-item list-group-item-success"><%= guest.username %> </li>
                     <% } %> 
               </ul>
         </div>
         <div class="col-4">
             <ul class="list-group">
-                <li class="list-group-item active">Not Attending</li>
+                <li class="list-group-item list-group-item-info active">Not Attending</li>
                 <% for(let guest of notAttending) { %> 
-                    <li class="list-group-item"><%= guest.username %> </li>
+                    <li class="list-group-item list-group-item-danger"><%= guest.username %> </li>
                     <% } %> 
               </ul>
         </div>
         <div class="col-4">
             <ul class="list-group">
-                <li class="list-group-item active">Unknown (yet to RSVP)</li>
+                <li class="list-group-item list-group-item-info active">Unknown (yet to RSVP)</li>
                 <% for(let guest of unknown) { %> 
-                    <li class="list-group-item"><%= guest.username %> </li>
+                    <li class="list-group-item list-group-item-warning"><%= guest.username %> </li>
                     <% } %> 
               </ul>
         </div>
     </div>
 </div>
 
+<hr/>
+<div class="container mt-1">
+    <div class="row justify-content-around text-center">
+        <div class="col-5">
+            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#Question">Add Q&A Question</button>
+        </div>
+        <div class="col-5">
+            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#Gift">Add Wedding Gift</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Question" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"> Add Question</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="/wedding/questions" method="POST">
+                    <div class="mb-3">
+                        <label for="question" class="form-label">Question</label>
+                        <input type="text" class="form-control" id="question" name="question" placeholder="Where will the wedding be located?">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="answer" class="form-label">Answer</label>
+                        <input type="text-area" style="height: 100px" class="form-control" id="answer" name="answer" placeholder="St. Edmund's Church, Taverham">
+                    </div>
+    
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Gift" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Add Wedding Gift</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="/wedding/gifts" method="POST" novalidate>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Gift Title</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="A brand new car" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="link" class="form-label">Link</label>
+                        <input type="url" class="form-control" id="link" name="link" placeholder="http://www.astonmartin.com" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
