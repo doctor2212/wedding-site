@@ -12,11 +12,11 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
 const Guest = require("./models/guest");
-const Question = require("./models/questions");
-const Gift = require("./models/gifts");
-const catchAsync = require("./utils/catchAsync");
-const { isLoggedIn, isAdmin } = require("./middleware");
-const { findByIdAndUpdate, findOneAndDelete } = require('./models/guest');
+const { isLoggedIn } = require("./middleware");
+
+const admin = require("./routes/admin")
+const login = require("./routes/login")
+const wedding = require("./routes/wedding")
 
 mongoose.connect("mongodb://localhost:27017/wedding-site", { 
     useNewUrlParser: true,
@@ -64,25 +64,17 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
+    res.locals.pageTitle = String;
     next();
 });
+
+app.use("/admin", admin);
+app.use("/login", login);
+app.use("/wedding", wedding);
 
 app.get("/", (req, res) => {
     res.render("landing-page");
     
-});
-
-app.get("/login", (req, res) => {
-    if(!req.user) {
-        res.render("users/login")
-    } else{
-        res.redirect("/wedding");
-    }
-});
-
-app.post("/login", passport.authenticate("local", {failureRedirect: "/login"}), (req, res) => {
-    req.flash("success", "Welcome", req.user.username)
-    res.redirect("/wedding")
 });
 
 app.get("/logout", isLoggedIn, (req, res) => {
@@ -91,92 +83,11 @@ app.get("/logout", isLoggedIn, (req, res) => {
     res.redirect("/")
 })
 
-// app.get("/new", async (req, res) => {
-//     // const guest = new Guest({attending: "unknown", username: "Nathan", isAdmin: true});
-//     // const registeredGuest = await Guest.register(guest, "nathan");
-//     const guest2 = new Guest({attending: "unknown", username: "Thomas", isAdmin: false, plusOnes: ["Matthew", "Mark", "Luke", "John"]});
-//     const registeredGuest2 = await Guest.register(guest2, "john");
-//     res.redirect("/wedding")
-// });
-
-// app.get("/new", async (req, res) => {
-//     const guest = new Guest({attending: "unknown", username: "John"});
-//     const registeredGuest = await Guest.register(guest, "john");
-//     res.redirect("/wedding")
-// });
-
-app.get("/wedding", isLoggedIn, (req,res) => {
-    res.render("wedding/wedding");
-});
-
-app.post("/wedding", isLoggedIn, catchAsync(async (req, res) => {
-    const { username } = req.user;
-    const { attending } = req.body;
-    if(attending === "yes"){
-        const updatedGuest = await Guest.findOneAndUpdate({ username }, {attending: "yes"} )
-        await updatedGuest.save()
-    } else if (attending === "no") {
-        const updatedGuest = await Guest.findOneAndUpdate({ username }, {attending: "no"} )
-        await updatedGuest.save()
-    };
-    req.flash("success", "RSVP successfully updated")
-    res.redirect("/wedding");
-}));
-
-app.get("/wedding/location", isLoggedIn, (req, res) => {
-    res.render("wedding/location");
-});
-
-app.get("/wedding/questions", isLoggedIn, catchAsync(async(req, res) => {
-    const [...questions] = await Question.find({});
-    res.render("wedding/questions", { questions })
-    
-}));
-
-app.post("/wedding/questions", isLoggedIn, catchAsync(async(req, res) => {
-    const {question, answer} = req.body;
-    const newQuestion = await new Question({question, answer});
-    await newQuestion.save();
-    res.redirect("/admin")
-}));
-
-app.delete("/wedding/questions", isLoggedIn, catchAsync(async(req, res) => {
-    const { question } = req.body;
-    const questionToDelete = await Question.findOneAndDelete({question});
-    res.redirect("/wedding/questions");
-}));
-
-app.get("/wedding/gifts", isLoggedIn, catchAsync(async(req, res) => {
-    const [...gifts] = await Gift.find({});
-    res.render("wedding/gifts", { gifts })
-    
-}));
-
-app.post("/wedding/gifts", isLoggedIn, catchAsync(async(req, res) => {
-    const {title, link} = req.body;
-    const newGift = await new Gift({title, link});
-    await newGift.save();
-    res.redirect("/admin")
-}));
-
-app.delete("/wedding/gifts", isLoggedIn, catchAsync(async(req, res) => {
-    const { title } = req.body;
-    const questionToDelete = await Gift.findOneAndDelete({title});
-    res.redirect("/wedding/questions");
-}));
-
-
-app.get("/register", (req, res) => {
-    res.render("users/register")
-});
-
-app.get("/admin", isLoggedIn, isAdmin, catchAsync(async (req, res) => {
-    const attending = await Guest.find({"attending" : "yes"});
-    const notAttending = await Guest.find({"attending" : "no"});
-    const unknown = await Guest.find({"attending" : "unknown"});
-    res.render("users/admin", {attending, notAttending , unknown});
-}));
-
+app.get("*", (req, res) => {
+    res.status(404, "Cannot find that page");
+    req.flash("error", "Unable to find that page!");
+    res.redirect("/")
+})
 app.listen(3000, () => {
     console.log(`Serving on port 3000`)
 });

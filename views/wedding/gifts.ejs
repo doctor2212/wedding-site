@@ -1,18 +1,5 @@
 <% layout("/layouts/boilerplate") %>
 
 <div class="container mt-2">
-    <h1 class="text-center h3 mb-5"><strong>Wedding Gifts</strong></h1>
-    <% for(let i = 0; i < gifts.length; i++) {%>
-        <div>
-            <h1 class="h5"><strong><%= gifts[i].title %></strong></h1>
-            <p><a href="http://<%=gifts[i].link%>"><%= gifts[i].link %></a>
-                <% if(currentUser.isAdmin === true) { %> 
-                    <form action="/wedding/gifts?_method=DELETE" method="POST">
-                        <input type="text" id="title" name="title" value="<%= gifts[i].title %>" hidden>
-                        <button class="btn btn-primary btn-sm">Delete</button>
-                    </form>
-                <% } %> 
-            </p>
-        </div> 
-    <% } %> 
+    <script id='script_myregistry_giftlist_iframe' type='text/javascript' src='//www.myregistry.com//Visitors/GiftList/iFrames/EmbedRegistry.ashx?r=_zPuq3xqWBbZyhmV4Taylg2&v=2'></script>
 </div>

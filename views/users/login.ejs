@@ -2,9 +2,11 @@
     <link rel="stylesheet" href="stylesheets/bootstrap.css">
     <link rel="stylesheet" href="stylesheets/signin.css">
     <style>@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@600&display=swap');</style>
+    <title>Login | The Wedding of Grace and Nathan</title>
 </head>
 
     <body class="d-flex flex-column vh-100">
+        <%- include('../partials/flash')%>
         <header class="container">
             <h1 class="display-6 mt-2 text-center">The Wedding of Grace & Nathan</h1>
         </header>
@@ -29,5 +31,8 @@
             <button class="btn btn-md btn-primary btn-block" type="submit">Sign in</button>
         </form>
     </main>
+
+    <script src="/javascripts/bootstrap.bundle.js"></script>
+    <script src="/javascripts/validation.js"></script>
 </body>
     

@@ -34,11 +34,12 @@
 <hr/>
 <div class="container mt-1">
     <div class="row justify-content-around text-center">
-        <div class="col-5">
+        <div class="col-4">
             <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#Question">Add Q&A Question</button>
         </div>
-        <div class="col-5">
-            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#Gift">Add Wedding Gift</button>
+    
+        <div class="col-4">
+            <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#Register">Register</button>
         </div>
     </div>
 </div>
@@ -53,15 +54,15 @@
             </div>
 
             <div class="modal-body">
-                <form action="/wedding/questions" method="POST">
+                <form action="/wedding/questions" method="POST" class="needs-validation" novalidate>
                     <div class="mb-3">
                         <label for="question" class="form-label">Question</label>
-                        <input type="text" class="form-control" id="question" name="question" placeholder="Where will the wedding be located?">
+                        <input type="text" class="form-control" id="question" name="question" placeholder="Where will the wedding be located?" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="answer" class="form-label">Answer</label>
-                        <input type="text-area" style="height: 100px" class="form-control" id="answer" name="answer" placeholder="St. Edmund's Church, Taverham">
+                        <input type="text-area" style="height: 100px" class="form-control" id="answer" name="answer" placeholder="St. Edmund's Church, Taverham" required>
                     </div>
     
                     <div class="modal-footer">
@@ -74,26 +75,38 @@
     </div>
 </div>
 
-<div class="modal fade" id="Gift" tabindex="-1">
+
+<div class="modal fade" id="Register" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"> Add Wedding Gift</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Register User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
-                <form action="/wedding/gifts" method="POST" novalidate>
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Gift Title</label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="A brand new car" required>
-                    </div>
+                    <form action="/admin" method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3 form-floating">
+                            <input type="text" class="form-control" id="username" name="username" placeholder=" " required>
+                            <label for="username" class="form-label">Username</label>
+                            <div class="form-text">Enter first name of individual</div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="link" class="form-label">Link</label>
-                        <input type="url" class="form-control" id="link" name="link" placeholder="http://www.astonmartin.com" required>
-                    </div>
+                        <div class="mb-3 form-floating">
+                            <input type="password" class="form-control" placeholder=" " name="password" id="password" required>
+                            <label for="password" class="form-label">Password</label>
+                        </div>
 
+                        <div class="mb-3">
+                            <label for="family" class="form-label">Family</label>
+                            <input type="text-area" style="height: 100px" class="form-control" id="family" name="family">
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" name="admin" id="admin">
+                            <label for="admin" class="form-check-label">Admin?</label>
+                        </div>
+    
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
