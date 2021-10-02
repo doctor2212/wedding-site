@@ -22,13 +22,13 @@
     </div>
 
 <div class="row pt-5 pb-2">
-    <div class="col-6 d-inline text-center my-auto">
+    <div class="col-sm-12 col-md-6 d-inline text-center my-auto">
         <h2>The Day</h2>
         <p class="lead">Join us!</p>
         <p>You are warmly invited to join us on our wedding day, for a ceremony in the church and then an informal
             time of drinks and cake after the ceremony!</p>
     </div>
-    <div class="col-6">
+    <div class="col-sm-12 col-md-6">
         <img class="img-flex img-restrained"
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/St_Edmund%27s_church_Taverham_Norfolk_%283683718801%29.jpg/1200px-St_Edmund%27s_church_Taverham_Norfolk_%283683718801%29.jpg"
             alt="">
@@ -55,7 +55,7 @@
                     <div class="mb-3">
                         <% if(!currentUser.plusOnes.length) {%>
                             <p class="lead"><%= currentUser.username %></p>
-                        <% } else if(currentUser.plusOnes.length) { %>
+                        <% } else if(currentUser.plusOnes.length > 0 && currentUser.plusOnes[0] !== "") { %>
                             <p class="lead text-center"><%= currentUser.username%>'s Family:</p>
                             <ul>
                                 <% for(members of currentUser.plusOnes) { %>

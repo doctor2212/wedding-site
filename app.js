@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== "production"){
+    require("dotenv").config();
+};
+
 const express = require('express');
 const app = express();
 
@@ -5,20 +9,26 @@ const mongoose = require('mongoose');
 const path = require('path');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const MongoStore = require("connect-mongo");
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
-
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
 
 const Guest = require("./models/guest");
 const { isLoggedIn } = require("./middleware");
 
 const admin = require("./routes/admin")
 const login = require("./routes/login")
-const wedding = require("./routes/wedding")
+const wedding = require("./routes/wedding");
 
-mongoose.connect("mongodb://localhost:27017/wedding-site", { 
+// const dbUrl = process.env.DB_URL
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/wedding-site";
+const secret = process.env.SECRET || "thisshouldbeabettersecret"
+
+mongoose.connect(dbUrl, { 
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
@@ -38,13 +48,29 @@ app.use(express.json())
 
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(mongoSanitize())
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: secret
+    }
+});
+
+store.on("error", function(e){
+    console.log(e)
+});
 
 const sessionConfig = {
-    secret: 'thisshouldbeabettersecret',
+    store,
+    name: "session",
+    secret: secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        // secure: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     }
@@ -52,6 +78,11 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -81,13 +112,17 @@ app.get("/logout", isLoggedIn, (req, res) => {
     req.logout();
     req.flash("success", "Goodbye")
     res.redirect("/")
-})
+});
 
 app.get("*", (req, res) => {
     res.status(404, "Cannot find that page");
     req.flash("error", "Unable to find that page!");
     res.redirect("/")
 })
-app.listen(3000, () => {
-    console.log(`Serving on port 3000`)
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`)
 });
+
